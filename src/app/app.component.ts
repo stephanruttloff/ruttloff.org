@@ -1,10 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { combineLatest, Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { TerminalService } from './services/terminal.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
-  title = 'website';
+export class AppComponent implements OnInit {
+  private refreshRate: number = 10;
+  private modules: Observable<string>[] = [];
+
+  public title = 'website';
+  public terminalOutput$: Observable<string> = combineLatest(this.modules).pipe(
+    map((moduleOutputs) => moduleOutputs.join(''))
+  );
+
+  constructor(private terminalService: TerminalService) {}
+
+  ngOnInit(): void {
+    this.modules.push(of('loading '));
+    this.modules.push(this.terminalService.loading());
+  }
 }

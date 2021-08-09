@@ -1,1 +1,8 @@
-/* You can add global styles to this file, and also import other style files */
+$font-dir: '~jetbrains-mono/fonts/webfonts';
+@import '~jetbrains-mono/scss/jetbrains-mono';
+
+html {
+  background-color: black;
+  color: white;
+  font-family: 'JetBrains Mono';
+}
