@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { combineLatest, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { TerminalService } from './services/terminal.service';
 
 @Component({
@@ -12,12 +13,15 @@ export class AppComponent implements OnInit {
   private refreshRate: number = 10;
   private modules: Observable<string>[] = [];
 
-  public title = 'website';
   public terminalOutput$: Observable<string> = combineLatest(this.modules).pipe(
-    map((moduleOutputs) => moduleOutputs.join(''))
+    map((moduleOutputs) => moduleOutputs.join('')),
+    tap((terminalOutput) => this.titleService.setTitle(terminalOutput))
   );
 
-  constructor(private terminalService: TerminalService) {}
+  constructor(
+    private terminalService: TerminalService,
+    private titleService: Title
+  ) {}
 
   ngOnInit(): void {
     this.modules.push(of('loading '));
